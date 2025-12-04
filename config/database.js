@@ -8,5 +8,3 @@ module.exports.connect = async () => {
     console.log("Connect Error");
   }
 };
-
-mongoose.connect(process.env.MONGO_URL);
