@@ -1,33 +1,11 @@
 // [get] /admin/products
 const Product = require("../../models/product.model");
+const filterStatusHelper = require("../../helpers/filterStatus");
+const SearchHelper = require("../../helpers/search");
+const PaginationHelper = require("../../helpers/pagination");
 
 module.exports.index = async (req, res) => {
-  let filterStatus = [
-    {
-      name: "Tất cả",
-      status: "",
-      class: "",
-    },
-    {
-      name: "Hoạt động",
-      status: "active",
-      class: "",
-    },
-    {
-      name: "Dừng hoạt động",
-      status: "inactive",
-      class: "",
-    },
-  ];
-  if (req.query.status) {
-    const index = filterStatus.findIndex(
-      (item) => item.status == req.query.status
-    );
-    filterStatus[index].class = "active";
-  } else {
-    const index = filterStatus.findIndex((item) => item.status == "");
-    filterStatus[index].class = "active";
-  }
+  const filterStatus = filterStatusHelper(req.query);
 
   let find = {
     deleted: false,
@@ -35,21 +13,32 @@ module.exports.index = async (req, res) => {
   if (req.query.status) {
     find.status = req.query.status;
   }
+  const ObjectSearch = SearchHelper(req.query);
 
-  let keyword = "";
-  if (req.query.keyword) {
-    keyword = req.query.keyword;
-
-    const regex = new RegExp(keyword, "i");
-    find.title = regex;
+  if (ObjectSearch.regex) {
+    find.title = ObjectSearch.regex;
   }
+  // pagination
+  const countProduct = await Product.countDocuments(find);
+  let ObjectPagination = PaginationHelper(
+    {
+      currentPage: 1,
+      limitItems: 4,
+    },
+    req.query,
+    countProduct
+  );
 
-  const products = await Product.find(find);
+  //end pagination
+  const products = await Product.find(find)
+    .limit(ObjectPagination.limitItems)
+    .skip(ObjectPagination.skip);
 
   res.render("admin/page/product/index", {
     pageTitle: "Danh sách sản phẩm",
     products: products,
     filterStatus: filterStatus,
-    keyword: keyword,
+    keyword: ObjectSearch.keyword,
+    pagination: ObjectPagination,
   });
 };
