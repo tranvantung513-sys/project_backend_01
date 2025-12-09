@@ -1,4 +1,5 @@
 const express = require("express");
+var methodOverride = require("method-override");
 require("dotenv").config();
 const database = require("./config/database");
 
@@ -9,6 +10,9 @@ const route = require("./routes/client/index.route");
 
 database.connect();
 const app = express();
+
+app.use(methodOverride("_method"));
+
 const port = process.env.PORT;
 
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
