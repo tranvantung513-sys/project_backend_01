@@ -1,6 +1,11 @@
 const express = require("express");
 var methodOverride = require("method-override");
+
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+
+const flash = require("express-flash");
 require("dotenv").config();
 
 const database = require("./config/database");
@@ -12,6 +17,10 @@ const route = require("./routes/client/index.route");
 
 database.connect();
 const app = express();
+// flash
+app.use(cookieParser("tung"));
+app.use(session({ cookie: { maxAge: 60000 } }));
+app.use(flash());
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));

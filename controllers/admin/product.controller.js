@@ -48,6 +48,8 @@ module.exports.changStatus = async (req, res) => {
   const status = req.params.status;
   const id = req.params.id;
 
+  req.flash("success", "Cập nhật trạng thái thành công");
+
   await Product.updateOne({ _id: id }, { status: status });
 
   res.redirect("/admin/products");
@@ -79,6 +81,10 @@ module.exports.changMulti = async (req, res) => {
           status: "active",
         }
       );
+      req.flash(
+        "success",
+        `Cập nhật trạng thái của ${ids.length} sản  phẩm thành công`
+      );
       break;
     case "inactive":
       await Product.updateMany(
@@ -91,7 +97,12 @@ module.exports.changMulti = async (req, res) => {
           status: "inactive",
         }
       );
+      req.flash(
+        "success",
+        `Cập nhật trạng thái của ${ids.length} sản  phẩm thành công`
+      );
       break;
+
     case "deleted-all":
       await Product.updateMany(
         {
@@ -104,6 +115,7 @@ module.exports.changMulti = async (req, res) => {
           deletedAt: new Date(),
         }
       );
+      req.flash("success", `Xóa sản phẩm thành công`);
       break;
     case "change-position":
       console.log(ids);
