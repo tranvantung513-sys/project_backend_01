@@ -42,12 +42,43 @@ module.exports.index = async (req, res) => {
     pagination: ObjectPagination,
   });
 };
-
+// change status
 module.exports.changStatus = async (req, res) => {
   const status = req.params.status;
   const id = req.params.id;
 
   await Product.updateOne({ _id: id }, { status: status });
 
+  res.redirect("/admin/products");
+};
+// delete product
+module.exports.deleteItem = async (req, res) => {
+  const id = req.params.id;
+  await Product.deleteOne({ _id: id });
+  res.redirect("/admin/products");
+};
+
+module.exports.changMulti = async (req, res) => {
+  const type = req.body.type;
+  const ids = req.body.ids.split(", ");
+
+  switch (type) {
+    case "inactive":
+      await Product.updateMany(
+        {
+          _id: {
+            $in: ids,
+          },
+        },
+        {
+          status: "inactive",
+        }
+      );
+      break;
+    case "inactive":
+      break;
+    default:
+      break;
+  }
   res.redirect("/admin/products");
 };
