@@ -94,13 +94,28 @@ if (formChangeMulti) {
     const inputChecked = checkboxMulti.querySelectorAll(
       "input[name = 'id']:checked"
     );
+    const typeChange = e.target.elements.type.value;
+
+    if (typeChange == "deleted-all") {
+      const isConfirm = confirm("Bạn có muốn xóa tất cả không? ");
+      if (!isConfirm) {
+        return;
+      }
+    }
+
     if (inputChecked.length > 0) {
       let ids = [];
-
       const inputIds = formChangeMulti.querySelector("input[name='ids']");
       inputChecked.forEach((input) => {
         const id = input.value;
-        ids.push(id);
+        if (typeChange == "change-position") {
+          const position = input
+            .closest("tr")
+            .querySelector("input[name='position']").value;
+          ids.push(`${id}-${position}`);
+        } else {
+          ids.push(id);
+        }
       });
       console.log(ids.join(", "));
       inputIds.value = ids.join(", ");
