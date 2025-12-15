@@ -26,4 +26,7 @@ route.patch(
   validate.createPost,
   controller.editPatch
 );
+
+route.get("/detail/:id", controller.detail);
+
 module.exports = route;

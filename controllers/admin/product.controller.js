@@ -199,7 +199,25 @@ module.exports.editPatch = async (req, res) => {
     );
     req.flash("success", "Sửa sản phẩm thành công");
   } catch (error) {
-    req.flash("error", "Xập nhật sản phẩm thất bại");
+    req.flash("error", "Cập nhật sản phẩm thất bại");
   }
   res.redirect(`${systemConfig.prefixAdmin}/products/edit/${id}`);
+};
+
+module.exports.detail = async (req, res) => {
+  try {
+    const find = {
+      deleted: false,
+      _id: req.params.id,
+    };
+    const product = await Product.findOne(find);
+    console.log(product);
+    res.render("admin/page/product/detail", {
+      pageTitle: product.title,
+      product: product,
+    });
+  } catch (error) {
+    req.flash("error", "Không tồn tại sản phẩm này");
+    res.redirect(`${systemConfig.prefixAdmin}/products`);
+  }
 };
