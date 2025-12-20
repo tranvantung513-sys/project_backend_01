@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 var methodOverride = require("method-override");
 
 const bodyParser = require("body-parser");
@@ -21,7 +22,13 @@ const app = express();
 app.use(cookieParser("tung"));
 app.use(session({ cookie: { maxAge: 60000 } }));
 app.use(flash());
-
+// end flash
+// tinyMCE
+app.use(
+  "/tinymce",
+  express.static(path.join(__dirname, "node_modules", "tinymce"))
+);
+// end tinyMCE
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(methodOverride("_method"));
