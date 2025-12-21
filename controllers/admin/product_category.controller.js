@@ -40,6 +40,35 @@ module.exports.createPost = async (req, res) => {
   const record = new ProductCategory(req.body);
   await record.save();
   res.redirect(`${systemConfig.prefixAdmin}/product_category`);
+};
 
-  res.send("oke");
+module.exports.edit = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = await ProductCategory.findOne({
+      _id: id,
+      deleted: false,
+    });
+
+    const record = await ProductCategory.find({
+      deleted: false,
+    });
+    const newRecord = createTreeHelper.tree(record);
+    res.render("admin/page/product_category/edit", {
+      pageTitle: "Chỉnh sửa danh mục sản phẩm",
+      data: data,
+      record: newRecord,
+    });
+  } catch (error) {
+    res.redirect(`${systemConfig.prefixAdmin}/product_category`);
+  }
+};
+
+module.exports.editPatch = async (req, res) => {
+  const id = req.params.id;
+
+  req.body.position = parseInt(req.body.position);
+
+  await ProductCategory.updateOne({ _id: id }, req.body);
+  res.redirect(`${systemConfig.prefixAdmin}/product_category`);
 };
