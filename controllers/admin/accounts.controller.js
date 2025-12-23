@@ -1,6 +1,6 @@
-const Account = require("../../models/accounts.model");
 const Role = require("../../models/role.model");
 const systemConfig = require("../../config/system");
+const Account = require("../../models/accounts.model");
 const md5 = require("md5");
 module.exports.index = async (req, res) => {
   let find = {
