@@ -7,6 +7,7 @@ const validate = require("../../validates/admin/accounts.validates");
 const uploadCloud = require("../../middlewares/admin/uploadCloud.middleware");
 router.get("/", controller.index);
 router.get("/create", controller.create);
+
 router.post(
   "/create",
   upload.single("avatar"),
@@ -14,5 +15,12 @@ router.post(
   validate.createPost,
   controller.createPost
 );
-
+router.get("/edit/:id", controller.edit);
+router.patch(
+  "/edit/:id",
+  upload.single("avatar"),
+  uploadCloud.upload,
+  validate.editPatch,
+  controller.editPatch
+);
 module.exports = router;
