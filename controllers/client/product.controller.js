@@ -14,7 +14,6 @@ module.exports.index = async (req, res) => {
     ).toFixed(0);
     return item;
   });
-  console.log(products);
 
   res.render("client/pages/products/index", {
     pageTitle: "Danh sách sản phẩm",

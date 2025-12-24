@@ -82,7 +82,14 @@ module.exports.deleteItem = async (req, res) => {
   await Product.deleteOne({ _id: id });
   await Product.updateOne(
     { _id: id },
-    { deleted: true, deletedAt: new Date() }
+    {
+      deleted: true,
+      // deletedAt: new Date()
+      deletedBy: {
+        account_id: res.locals.user.id,
+        deletedAt: new Date(),
+      },
+    }
   );
   res.redirect("/admin/products");
 };
@@ -134,7 +141,10 @@ module.exports.changMulti = async (req, res) => {
         },
         {
           deleted: true,
-          deletedAt: new Date(),
+          deletedBy: {
+            account_id: res.locals.user.id,
+            deletedAt: new Date(),
+          },
         }
       );
       req.flash("success", "Xóa sản phẩm thành công");
@@ -224,6 +234,10 @@ module.exports.editPatch = async (req, res) => {
   }
 
   try {
+    // const updatedB = {
+    //   account_id: res.locals.user.id,
+    //   updatedAt: new Date(),
+    // };
     await Product.updateOne(
       {
         _id: id,

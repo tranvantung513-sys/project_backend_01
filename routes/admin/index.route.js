@@ -7,6 +7,7 @@ const productCategoryRoutes = require("./product_category.route");
 const roleRoutes = require("./role.route");
 const accountsRoutes = require("./accounts.route");
 const authRoutes = require("./auth.route");
+const myAccountRoutes = require("./my-account.route");
 
 const systemConfig = require("../../config/system");
 
@@ -32,4 +33,9 @@ module.exports = (app) => {
   app.use(PATH_ADMIN + "/roles", authMiddleware.requireAuth, roleRoutes);
   app.use(PATH_ADMIN + "/accounts", authMiddleware.requireAuth, accountsRoutes);
   app.use(PATH_ADMIN + "/auth", authRoutes);
+  app.use(
+    PATH_ADMIN + "/my-account",
+    authMiddleware.requireAuth,
+    myAccountRoutes
+  );
 };

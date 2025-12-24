@@ -1,13 +1,11 @@
 const ProductCategory = require("../../models/product_category.model");
 const createTreeHelper = require("../../helpers/createTree");
-// [get] /
-module.exports.index = async (req, res) => {
+
+module.exports.category = async (req, res, next) => {
   const productsCategory = await ProductCategory.find({
     deleted: false,
   });
   const newProductsCategory = createTreeHelper.tree(productsCategory);
-  res.render("client/pages/home/index", {
-    pageTitle: "Trang chủ",
-    layoutProductsCategory: newProductsCategory,
-  });
+  res.locals.layoutProductsCategory = newProductsCategory;
+  next();
 };
