@@ -1,20 +1,22 @@
 extends ../../layouts/default.pug
 block main
-    h1(class="mb-4") Danh sách tài khoản
+    if role.permissions.includes("accounts_view") 
+        h1(class="mb-4") Danh sách tài khoản
         .card.mb-3
             .card-header Danh sách
             .card-body
                 .row
                     .col-8
                     .col-4.text-right
-                        a(
-                            href=  `${prefixAdmin}/accounts/create`
-                            class="btn btn-outline-success"
-                        ) + Thêm mới
+                        if role.permissions.includes("accounts_create") 
+                            a(
+                                href=  `${prefixAdmin}/accounts/create`
+                                class="btn btn-outline-success"
+                            ) + Thêm mới
                 
 
 
-                   
+                    
                 table(
                     class="table table-hover table-sm"
                     
@@ -44,29 +46,32 @@ block main
                                 td #{item.email}
                                 
                                 td
-                                    if(item.status =="active")
-                                        a(
-                                            href="javascript:;"
-                                            class="badge badge-success"
-                                            data-status="active"
-                                        ) Hoạt động
-                                    else
-                                        a(
-                                            href="javascript:;"
-                                            class="badge badge-success"
-                                            data-status="inactive"
-                                        ) Dừng hoạt động
+                                    if role.permissions.includes("accounts_edit") 
+                                        if(item.status =="active")
+                                            a(
+                                                href="javascript:;"
+                                                class="badge badge-success"
+                                                data-status="active"
+                                            ) Hoạt động
+                                        else
+                                            a(
+                                                href="javascript:;"
+                                                class="badge badge-success"
+                                                data-status="inactive"
+                                            ) Dừng hoạt động
                                 td
                                     a(
                                         href=`${prefixAdmin}/accounts/detail/${item._id}` 
                                         class="btn btn-secondary btn-sm"
                                     ) Chi tiết
-                                    a(
-                                        href=`${prefixAdmin}/accounts/edit/${item._id}` 
-                                        class="btn btn-warning btn-sm"
-                                    ) Sửa
-                                    button(
-                                        class="btn btn-danger btn-sm ml-1"
-                                        button-delete
-                                        data-id = item._id
+                                    if role.permissions.includes("accounts_edit") 
+                                        a(
+                                            href=`${prefixAdmin}/accounts/edit/${item._id}` 
+                                            class="btn btn-warning btn-sm"
+                                        ) Sửa
+                                    if role.permissions.includes("accounts_delete")     
+                                        button(
+                                            class="btn btn-danger btn-sm ml-1"
+                                            button-delete
+                                            data-id = item._id
                                     ) Xóa

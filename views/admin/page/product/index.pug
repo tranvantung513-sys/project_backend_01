@@ -32,12 +32,14 @@ block main
         .card-body
             .row
                 .col-8
-                    +form-change-multi(`${prefixAdmin}/products/change-multi?_method=PATCH`)
+                    if role.permissions.includes("products_edit") 
+                        +form-change-multi(`${prefixAdmin}/products/change-multi?_method=PATCH`)
                 .col-4 
-                    a(
-                        href = `${prefixAdmin}/products/create`
-                        class = "btn btn-outline-success"
-                    ) + Thêm mới 
+                    if role.permissions.includes("products_edit") 
+                        a(
+                            href = `${prefixAdmin}/products/create`
+                            class = "btn btn-outline-success"
+                        ) + Thêm mới 
 
 
     
@@ -84,36 +86,39 @@ block main
                                     name = "position"
                                 )
                             td
-                                if(item.status =="active")
-                                    a(
-                                        href="javascript:;"
-                                        data-status=item.status
-                                        data-id=item._id
-                                        button-change-status 
-                                        class="badge badge-success"
-                                    ) Hoạt động
-                                else
-                                    a(
-                                        href="javascript:;"
-                                        data-status=item.status
-                                        data-id=item._id
-                                        button-change-status 
-                                        class="badge badge-success"
-                                    ) Dừng hoạt động
+                                if role.permissions.includes("products_edit") 
+                                    if(item.status =="active")
+                                        a(
+                                            href="javascript:;"
+                                            data-status=item.status
+                                            data-id=item._id
+                                            button-change-status 
+                                            class="badge badge-success"
+                                        ) Hoạt động
+                                    else
+                                        a(
+                                            href="javascript:;"
+                                            data-status=item.status
+                                            data-id=item._id
+                                            button-change-status 
+                                            class="badge badge-success"
+                                        ) Dừng hoạt động
                             td
                                 a(
                                     href=`${prefixAdmin}/products/detail/${item._id}` 
                                     class="btn btn-secondary btn-sm"
                                 ) Chi tiết
-                                a(
-                                    href=`${prefixAdmin}/products/edit/${item._id}` 
-                                    class="btn btn-warning btn-sm"
-                                ) Sửa
-                                button(
-                                    class="btn btn-danger btn-sm ml-1"
-                                    button-delete
-                                    data-id = item._id
-                                ) Xóa
+                                if role.permissions.includes("products_edit") 
+                                    a(
+                                        href=`${prefixAdmin}/products/edit/${item._id}` 
+                                        class="btn btn-warning btn-sm"
+                                    ) Sửa
+                                if role.permissions.includes("products_xóa") 
+                                    button(
+                                        class="btn btn-danger btn-sm ml-1"
+                                        button-delete
+                                        data-id = item._id
+                                    ) Xóa
     +pagination(pagination)
 
     form(

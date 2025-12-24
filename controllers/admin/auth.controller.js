@@ -5,9 +5,13 @@ const md5 = require("md5");
 // [get] /admin/auth/login
 
 module.exports.login = (req, res) => {
-  res.render("admin/page/auth/login", {
-    pageTitle: "Trang Đăng nhập",
-  });
+  if (req.cookies.token) {
+    res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
+  } else {
+    res.render("admin/page/auth/login", {
+      pageTitle: "Trang Đăng nhập",
+    });
+  }
 };
 
 // [post] /admin/auth/login
