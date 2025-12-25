@@ -1,19 +1,14 @@
 // [get] /products
 const Product = require("../../models/product.model");
-
+const ProductCategory = require("../../models/product_category.model");
+const productHelper = require("../../helpers/product");
 module.exports.index = async (req, res) => {
   const products = await Product.find({
     status: "active",
     deleted: false,
   }).sort({ position: "desc" });
 
-  const productNew = products.map((item) => {
-    item.priceNew = (
-      (item.price * (100 - item.discountPercentage)) /
-      100
-    ).toFixed(0);
-    return item;
-  });
+  const productNew = productHelper.priceNewProducts(products);
 
   res.render("client/pages/products/index", {
     pageTitle: "Danh sách sản phẩm",
@@ -39,4 +34,20 @@ module.exports.detail = async (req, res) => {
     req.flash("error", "Không tồn tại sản phẩm này");
     res.redirect(`/products`);
   }
+};
+
+// [get] /products/slugCategory
+module.exports.category = async (req, res) => {
+  const category = await ProductCategory.findOne({
+    slug: req.params.slugCategory,
+  });
+  const products = await Product.find({
+    product_category_id: category.id,
+    deleted: false,
+  }).sort({ position: "desc" });
+  const productNew = productHelper.priceNewProducts(products);
+  res.render("client/pages/products/index", {
+    pageTitle: category.title,
+    products: productNew,
+  });
 };
