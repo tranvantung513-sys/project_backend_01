@@ -2,7 +2,9 @@
 extends ../../layout/default.pug
 include ../../mixins/boxhead.pug
 include ../../mixins/product-layout.pug
+include ../../mixins/alert.pug
 block main
+    +alert-success(3000)
     
     .section-products-featured.my-5
         .container
