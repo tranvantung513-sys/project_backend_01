@@ -49,8 +49,6 @@ module.exports.addPost = async (req, res) => {
   if (exitsProductInCart) {
     const quantityNew = quantity + exitsProductInCart.quantity;
 
-    console.log(quantityNew);
-
     await Cart.updateOne(
       {
         _id: cartId,
@@ -93,5 +91,25 @@ module.exports.delete = async (req, res) => {
     }
   );
   req.flash("success", "Đã xóa sản phẩm khỏi giỏ hàng");
+  res.redirect("/cart");
+};
+
+module.exports.update = async (req, res) => {
+  const cartId = req.cookies.cartId;
+  const productId = req.params.productId;
+  const quantity = req.params.quantity;
+  console.log(req.params);
+  await Cart.updateOne(
+    {
+      _id: cartId,
+      "products.product_id": productId,
+    },
+    {
+      $set: {
+        "products.$.quantity": quantity,
+      },
+    }
+  );
+  req.flash("success", "Cập nhật thành công");
   res.redirect("/cart");
 };
