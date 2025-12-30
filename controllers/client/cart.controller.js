@@ -110,6 +110,6 @@ module.exports.update = async (req, res) => {
       },
     }
   );
-  req.flash("success", "Cập nhật thành công");
+  // req.flash("success", "Cập nhật thành công");
   res.redirect("/cart");
 };

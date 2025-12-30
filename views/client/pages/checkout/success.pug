@@ -1,0 +1,10 @@
+extends ../../layout/default.pug
+include ../../mixins/boxhead.pug
+include ../../mixins/alert.pug
+block main
+    +alert-success(5000)
+    +alert-error(5000)
+    .container.my-3
+        .row
+            .col-12
+                +box-head("Đặt hàng thành công")
